@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐 | 专属祝福</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* 标题样式 */
+        .title {
+            position: absolute;
+            top: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: #fff;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(255, 69, 0, 0.5), 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: titleFloat 3s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+
+        /* 标题浮动动画 */
+        @keyframes titleFloat {
+            from {
+                transform: translateX(-50%) translateY(0);
+            }
+            to {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+
+        /* 心形容器 */
+        .heart-container {
+            position: relative;
+            width: clamp(250px, 80vw, 500px);
+            height: clamp(250px, 80vw, 500px);
+            transform: scale(1);
+            z-index: 5;
+        }
+
+        /* 心形祝福卡片 */
+        .heart {
+            position: absolute;
+            width: clamp(30px, 5vw, 50px);
+            height: clamp(30px, 5vw, 50px);
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(255, 105, 180, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(10px, 2vw, 14px);
+            color: #e63946;
+            text-align: center;
+            padding: 5px;
+            animation: fadeIn 0.8s ease-in-out forwards, heartBeat 3s ease-in-out infinite alternate;
+            opacity: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* 卡片渐入动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* 卡片心跳动画 */
+        @keyframes heartBeat {
+            from {
+                transform: scale(1);
+                box-shadow: 0 3px 8px rgba(255, 105, 180, 0.3);
+            }
+            to {
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
+            }
+        }
+
+        /* 卡片hover效果 */
+        .heart:hover {
+            background-color: #ffe5ec;
+            transform: scale(1.1);
+            color: #d62828;
+        }
+
+        /* 花瓣样式 */
+        .petal {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #ffb6c1;
+            border-radius: 50% 0;
+            opacity: 0.7;
+            animation: petalFall linear infinite;
+        }
+
+        /* 花瓣飘落动画 */
+        @keyframes petalFall {
+            0% {
+                transform: translateY(-10px) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .heart-container {
+                width: clamp(200px, 70vw, 400px);
+                height: clamp(200px, 70vw, 400px);
+            }
+            .title {
+                top: 5vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">生日快乐</div>
+    <div class="heart-container" id="heartContainer"></div>
+
+    <!-- 背景音乐（自动播放，静音默认，可手动开启） -->
+    <audio id="bgm" loop preload="auto">
+        <!-- 替换为自己的生日祝福音乐链接，支持mp3格式 -->
+        <source src="https://example.com/birthday.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // 获取DOM元素
+        const heartContainer = document.getElementById('heartContainer');
+        const bgm = document.getElementById('bgm');
+        const body = document.body;
+
+        // 生日祝福语库（扩充版）
+        const wishes = [
+            "新的一岁要更好",
+            "好好爱自己",
+            "生日快乐",
+            "保持心情开朗",
+            "要继续相信自己呀",
+            "今天要吃好吃的",
+            "愿你元气满满",
+            "生日这天要开心",
+            "记得吃点甜的",
+            "新的一岁顺顺利利",
+            "暴富暴美暴瘦",
+            "平安喜乐，岁岁无忧",
+            "万事顺意，未来可期",
+            "被爱包围，永远幸福",
+            "每天都有小惊喜",
+            "烦恼清零，快乐加倍",
+            "解锁新的年龄，解锁新的美好",
+            "生日万岁，快乐无罪",
+            "愿你被世界温柔以待",
+            "新的一岁，奔赴山海"
+        ];
+
+        // 1. 生成完整的爱心外轮廓坐标（仅保留外轮廓，不添加内部点）
+        const heartOutlinePoints = [];
+        // 缩小步长，生成足够多的外轮廓坐标点（保证数量≥祝福语数量，让排列更均匀）
+        for (let t = 0; t < Math.PI * 2; t += 0.01) { 
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+            heartOutlinePoints.push({ x, y });
+        }
+
+        // 处理坐标，适配容器大小并居中
+        const processedPoints = heartOutlinePoints.map(point => {
+            const scale = heartContainer.clientWidth / 32; // 自适应缩放比例
+            const centerX = heartContainer.clientWidth / 2;
+            const centerY = heartContainer.clientHeight / 2;
+            return {
+                x: point.x * scale + centerX,
+                y: -point.y * scale + centerY // 负号让心形正过来
+            };
+        });
+
+        // 2. 核心优化：让祝福语卡片沿着爱心外轮廓**均匀有序**排列
+        // 计算步长，让卡片均匀分布在轮廓上（避免密集或稀疏）
+        const step = Math.floor(processedPoints.length / wishes.length);
+        wishes.forEach((wish, index) => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.textContent = wish;
+            // 按步长取坐标点，保证有序且均匀分布在轮廓上
+            const pointIndex = index * step;
+            const point = processedPoints[pointIndex];
+            heart.style.left = `${point.x}px`;
+            heart.style.top = `${point.y}px`;
+            // 依次延迟显示，营造逐个出现的效果
+            heart.style.animationDelay = `${index * 0.1}s`;
+            heartContainer.appendChild(heart);
+        });
+
+        // 3. 生成飘落的花瓣
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            // 随机花瓣位置（水平）
+            const left = Math.random() * 100;
+            petal.style.left = `${left}vw`;
+            // 随机花瓣大小
+            const size = Math.random() * 10 + 5;
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            // 随机飘落动画时长
+            const duration = Math.random() * 10 + 5;
+            petal.style.animationDuration = `${duration}s`;
+            // 随机花瓣颜色
+            const colors = ['#ffb6c1', '#ffc0cb', '#ff9a9e', '#fad0c4', '#ffddee'];
+            petal.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            // 随机旋转角度
+            petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            body.appendChild(petal);
+
+            // 花瓣落地后移除，避免DOM堆积
+            setTimeout(() => {
+                petal.remove();
+            }, duration * 1000);
+        }
+
+        // 持续生成花瓣
+        setInterval(createPetal, 200);
+
+        // 4. 背景音乐控制（点击页面开启音乐，解决浏览器自动播放限制）
+        document.addEventListener('click', () => {
+            bgm.play().catch(err => {
+                console.log('音乐播放需要用户交互，已尝试开启:', err);
+            });
+        });
+
+        // 5. 窗口大小变化时重新渲染（优化响应式）
+        window.addEventListener('resize', () => {
+            // 清空原有卡片
+            heartContainer.innerHTML = '';
+            // 重新生成爱心外轮廓坐标
+            const heartOutlinePoints = [];
+            for (let t = 0; t < Math.PI * 2; t += 0.01) {
+                const x = 16 * Math.pow(Math.sin(t), 3);
+                const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                heartOutlinePoints.push({ x, y });
+            }
+            // 处理坐标
+            const processedPoints = heartOutlinePoints.map(point => {
+                const scale = heartContainer.clientWidth / 32;
+                const centerX = heartContainer.clientWidth / 2;
+                const centerY = heartContainer.clientHeight / 2;
+                return {
+                    x: point.x * scale + centerX,
+                    y: -point.y * scale + centerY
+                };
+            });
+            // 重新生成卡片（保持有序排列逻辑）
+            const step = Math.floor(processedPoints.length / wishes.length);
+            wishes.forEach((wish, index) => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = wish;
+                const pointIndex = index * step;
+                const point = processedPoints[pointIndex];
+                heart.style.left = `${point.x}px`;
+                heart.style.top = `${point.y}px`;
+                heart.style.animationDelay = `${index * 0.1}s`;
+                heartContainer.appendChild(heart);
+            });
+        });
+    </script>
+</body>
+</html>
