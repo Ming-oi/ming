@@ -45,9 +45,12 @@
             transform: translate(-50%, -50%);
             font-size: clamp(3rem, 18vw, 12rem); /* 调整字体大小确保一行显示 */
             font-family: "STKaiti", "KaiTi", "SimKai", serif; /* 行楷字体 */
-            color: rgba(255, 255, 255, 0.3); /* 半透明作为背景 */
+            color: rgba(255, 255, 255, 0.8); /* 半透明作为背景 */
             font-weight: bold;
-            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            text-shadow: 
+                0 0 30px rgba(255, 255, 255, 0.8),
+                0 0 5px rgba(0, 0, 0, 0.3),
+                1px 1px 3px rgba(0, 0, 0, 0.2);
             white-space: nowrap; /* 强制不换行 */
             /* 更飘逸的动画 */
             animation: titleFloat 8s ease-in-out infinite, titleSway 6s ease-in-out infinite;
