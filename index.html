@@ -230,6 +230,22 @@
             100% { transform: scale(2); opacity: 0; }
         }
 
+        /* 署名样式 */
+        .signature {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: clamp(12px, 3vw, 16px);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            z-index: 4;
+            transition: all 0.3s ease;
+        }
+        
+        .signature:hover {
+            color: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
         /* 响应式调整 */
         @media (max-width: 768px) {
             .heart-container {
@@ -250,6 +266,8 @@
 <body>
     <div class="title">生日快乐</div>
     <div class="heart-container" id="heartContainer"></div>
+    <!-- 署名区域 -->
+    <div class="signature">—— 爱你的人 Ming 敬上</div>
 
     <audio id="bgm" loop preload="auto">
         <source src="https://example.com/birthday.mp3" type="audio/mpeg">
